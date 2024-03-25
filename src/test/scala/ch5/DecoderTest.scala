@@ -6,7 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 class DecoderTest extends AnyFlatSpec with ChiselScalatestTester {
   "DUT" should "pass" in {
-    test(new Decoder) {
+    test(new Decoder2x4) {
       dut => {
         for(i <- 0 until 4) {
           dut.io.in.poke(i.U)

@@ -2,7 +2,7 @@ package ch5
 import chisel3._
 import chisel3.util._
 
-class Encoder extends Module {
+class Encoder4x2 extends Module {
   val io = IO(new Bundle{
     val in = Input(UInt(4.W))
     val out = Output(UInt(2.W))
@@ -18,7 +18,7 @@ class Encoder extends Module {
   }
 }
 
-class BigEncoder extends Module {
+class Encoder16x4 extends Module {
   val io = IO(new Bundle{
     val in = Input(UInt(16.W))
     val out = Output(UInt(4.W))
@@ -30,4 +30,18 @@ class BigEncoder extends Module {
     v(i) := Mux(io.in(i), i.U, 0.U) | v(i - 1)
   }
   io.out := v(15)
+}
+
+class PriorityEncoder4x2 extends Module {
+  val io = IO(new Bundle{
+    val in = Input(UInt(4.W))
+    val out = Output(UInt(2.W))
+  })
+
+  val arbiter = Module(new Arbiter4R)
+  val encoder = Module(new Encoder4x2)
+
+  arbiter.io.r  := io.in
+  encoder.io.in := arbiter.io.g
+  io.out        := encoder.io.out
 }
